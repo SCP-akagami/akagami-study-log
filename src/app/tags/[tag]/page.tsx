@@ -1,37 +1,39 @@
 import Link from 'next/link'
-import { getAllPosts, getAllTags } from '../../lib/posts'
+import { getPostsByTag, getAllTags } from '../../../../lib/posts'
 
-export default function Home() {
-  const posts = getAllPosts()
-  const allTags = getAllTags()
+export async function generateStaticParams() {
+  const tags = getAllTags()
+  return tags.map((tag) => ({
+    tag: encodeURIComponent(tag),
+  }))
+}
+
+export default async function TagPage({ params }: { params: Promise<{ tag: string }> }) {
+  const { tag } = await params
+  const decodedTag = decodeURIComponent(tag)
+  const posts = getPostsByTag(decodedTag)
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* ヘッダー */}
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-4xl mx-auto px-4 py-6">
-          <h1 className="text-2xl font-bold text-gray-900">学習記録</h1>
-          <p className="text-gray-600 mt-1">日々の学習を記録しています</p>
+          <Link
+            href="/"
+            className="text-blue-600 hover:text-blue-800 text-sm font-medium mb-4 inline-block"
+          >
+            ← 学習記録一覧に戻る
+          </Link>
+          <h1 className="text-2xl font-bold text-gray-900">
+            タグ: {decodedTag}
+          </h1>
+          <p className="text-gray-600 mt-1">
+            {posts.length}件の記事があります
+          </p>
         </div>
       </header>
 
       <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* タグ一覧 */}
-        <div className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">タグ</h2>
-          <div className="flex flex-wrap gap-2">
-            {allTags.map((tag) => (
-              <Link
-                key={tag}
-                href={`/tags/${encodeURIComponent(tag)}`}
-                className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm hover:bg-blue-200 transition-colors"
-              >
-                {tag}
-              </Link>
-            ))}
-          </div>
-        </div>
-
         {/* 記事一覧 */}
         <div className="space-y-6">
           {posts.map((post) => (
@@ -65,7 +67,11 @@ export default function Home() {
                       <Link
                         key={tag}
                         href={`/tags/${encodeURIComponent(tag)}`}
-                        className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs hover:bg-gray-200 transition-colors"
+                        className={`px-2 py-1 rounded text-xs transition-colors ${
+                          tag === decodedTag
+                            ? 'bg-blue-100 text-blue-800'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
                       >
                         {tag}
                       </Link>
@@ -80,13 +86,12 @@ export default function Home() {
         {/* 記事が0件の場合 */}
         {posts.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500">まだ学習記録がありません。</p>
-            <p className="text-gray-400 text-sm mt-2">
-              postsディレクトリにMarkdownファイルを追加してください。
+            <p className="text-gray-500">
+              「{decodedTag}」タグの記事がありません。
             </p>
           </div>
         )}
       </div>
     </div>
   )
-}
+} 
