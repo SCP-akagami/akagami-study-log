@@ -1,8 +1,9 @@
 import Link from 'next/link'
-import { getPostData, getAllPosts } from '../../../../lib/posts'
+import { getPostData, getAllPosts, getPostCountByTag } from '../../../../lib/posts'
 import CodeHighlight from './CodeHighlight'
 import TableOfContents from './TableOfContents'
 import HeadingAnchor from './HeadingAnchor'
+import Navigation from '../../../components/Navigation'
 
 export async function generateStaticParams() {
   const posts = getAllPosts()
@@ -17,17 +18,8 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* ヘッダー */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-4xl mx-auto px-4 py-6">
-          <Link
-            href="/"
-            className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-          >
-            ← 学習記録一覧に戻る
-          </Link>
-        </div>
-      </header>
+      {/* ナビゲーション */}
+      <Navigation />
 
       <div className="max-w-4xl mx-auto px-4 py-8">
         <article className="bg-white rounded-lg shadow-sm border p-8">
@@ -48,15 +40,33 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
             </div>
             
             <div className="flex flex-wrap gap-2">
-              {post.tags.map((tag) => (
-                <Link
-                  key={tag}
-                  href={`/tags/${encodeURIComponent(tag)}`}
-                  className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm hover:bg-blue-200 transition-colors"
-                >
-                  {tag}
-                </Link>
-              ))}
+              {post.tags.map((tag) => {
+                const postCount = getPostCountByTag(tag)
+                return (
+                  <Link
+                    key={tag}
+                    href={`/tags/${encodeURIComponent(tag)}`}
+                    className="group bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm hover:bg-blue-200 transition-colors border border-blue-200 hover:border-blue-300"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="font-medium">#{tag}</span>
+                      <span className="text-xs bg-blue-200 px-2 py-0.5 rounded-full group-hover:bg-blue-300 transition-colors">
+                        {postCount}
+                      </span>
+                    </span>
+                  </Link>
+                )
+              })}
+            </div>
+            
+            {/* タグ一覧へのリンク */}
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <Link
+                href="/tags"
+                className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                すべてのタグを見る →
+              </Link>
             </div>
           </header>
 

@@ -1,35 +1,79 @@
 import Link from 'next/link'
-import { getAllPosts, getAllTags } from '../../lib/posts'
+import { getAllPosts, getAllTags, getTagsWithCount, getPostCountByTag } from '../../lib/posts'
+import Navigation from '../components/Navigation'
+import TagCloud from '../components/TagCloud'
 
 export default function Home() {
   const posts = getAllPosts()
   const allTags = getAllTags()
+  const tagsWithCount = getTagsWithCount()
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* ナビゲーション */}
+      <Navigation />
+      
       {/* ヘッダー */}
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-4xl mx-auto px-4 py-6">
-          <h1 className="text-2xl font-bold text-gray-900">学習記録</h1>
-          <p className="text-gray-600 mt-1">日々の学習を記録しています</p>
+          <p className="text-gray-600 text-center">日々の学習を記録しています</p>
         </div>
       </header>
 
       <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* タグ一覧 */}
+        {/* 統計情報 */}
+        <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600">{posts.length}</div>
+              <div className="text-sm text-gray-600">総投稿数</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">{allTags.length}</div>
+              <div className="text-sm text-gray-600">タグ数</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">
+                {posts.length > 0 ? Math.round(allTags.length / posts.length * 10) / 10 : 0}
+              </div>
+              <div className="text-sm text-gray-600">平均タグ数/投稿</div>
+            </div>
+          </div>
+        </div>
+
+        {/* 人気タグ */}
         <div className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">タグ</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">人気タグ</h2>
+            <Link
+              href="/tags"
+              className="text-sm text-blue-600 hover:text-blue-800 transition-colors"
+            >
+              すべて見る →
+            </Link>
+          </div>
           <div className="flex flex-wrap gap-2">
-            {allTags.map((tag) => (
+            {tagsWithCount.slice(0, 10).map(({ tag, count }) => (
               <Link
                 key={tag}
                 href={`/tags/${encodeURIComponent(tag)}`}
-                className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm hover:bg-blue-200 transition-colors"
+                className="group bg-blue-100 text-blue-800 px-3 py-2 rounded-full text-sm hover:bg-blue-200 transition-colors border border-blue-200 hover:border-blue-300"
               >
-                {tag}
+                <span className="flex items-center gap-1">
+                  <span className="font-medium">#{tag}</span>
+                  <span className="text-xs bg-blue-200 px-1.5 py-0.5 rounded-full group-hover:bg-blue-300 transition-colors">
+                    {count}
+                  </span>
+                </span>
               </Link>
             ))}
           </div>
+        </div>
+
+        {/* タグクラウド */}
+        <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
+          <h2 className="text-lg font-semibold text-gray-900 mb-6 text-center">タグクラウド</h2>
+          <TagCloud tags={tagsWithCount} maxTags={15} />
         </div>
 
         {/* 記事一覧 */}
@@ -61,15 +105,23 @@ export default function Home() {
                   </div>
                   
                   <div className="flex flex-wrap gap-2 mt-4">
-                    {post.tags.map((tag) => (
-                      <Link
-                        key={tag}
-                        href={`/tags/${encodeURIComponent(tag)}`}
-                        className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs hover:bg-gray-200 transition-colors"
-                      >
-                        {tag}
-                      </Link>
-                    ))}
+                    {post.tags.map((tag) => {
+                      const postCount = getPostCountByTag(tag)
+                      return (
+                        <Link
+                          key={tag}
+                          href={`/tags/${encodeURIComponent(tag)}`}
+                          className="group bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs hover:bg-gray-200 transition-colors"
+                        >
+                          <span className="flex items-center gap-1">
+                            <span>#{tag}</span>
+                            <span className="text-xs bg-gray-200 px-1 py-0.5 rounded group-hover:bg-gray-300 transition-colors">
+                              {postCount}
+                            </span>
+                          </span>
+                        </Link>
+                      )
+                    })}
                   </div>
                 </div>
               </div>

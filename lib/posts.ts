@@ -14,6 +14,11 @@ export interface Post {
   content?: string
 }
 
+export interface TagWithCount {
+  tag: string
+  count: number
+}
+
 export function getAllPosts(): Post[] {
   const fileNames = fs.readdirSync(postsDirectory)
   const allPostsData = fileNames
@@ -70,4 +75,51 @@ export function getAllTags(): string[] {
 export function getPostsByTag(tag: string): Post[] {
   const posts = getAllPosts()
   return posts.filter(post => post.tags.includes(tag))
+}
+
+// 新機能: タグと投稿数を取得
+export function getTagsWithCount(): TagWithCount[] {
+  const posts = getAllPosts()
+  const tagCounts: Record<string, number> = {}
+  
+  posts.forEach(post => {
+    post.tags.forEach(tag => {
+      tagCounts[tag] = (tagCounts[tag] || 0) + 1
+    })
+  })
+  
+  return Object.entries(tagCounts)
+    .map(([tag, count]) => ({ tag, count }))
+    .sort((a, b) => b.count - a.count) // 使用頻度順でソート
+}
+
+// 新機能: タグを使用頻度順で取得
+export function getTagsByFrequency(): string[] {
+  return getTagsWithCount().map(item => item.tag)
+}
+
+// 新機能: 複数タグでの投稿フィルタリング（AND検索）
+export function getPostsByTags(tags: string[]): Post[] {
+  if (tags.length === 0) return getAllPosts()
+  
+  const posts = getAllPosts()
+  return posts.filter(post => 
+    tags.every(tag => post.tags.includes(tag))
+  )
+}
+
+// 新機能: 複数タグでの投稿フィルタリング（OR検索）
+export function getPostsByTagsOr(tags: string[]): Post[] {
+  if (tags.length === 0) return getAllPosts()
+  
+  const posts = getAllPosts()
+  return posts.filter(post => 
+    tags.some(tag => post.tags.includes(tag))
+  )
+}
+
+// 新機能: 特定のタグの投稿数を取得
+export function getPostCountByTag(tag: string): number {
+  const posts = getAllPosts()
+  return posts.filter(post => post.tags.includes(tag)).length
 } 
