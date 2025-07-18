@@ -50,6 +50,20 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // SVGファイル用のContent-Typeヘッダー設定
+      {
+        source: '/images/(.*\\.svg)',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'image/svg+xml',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
     ];
   },
 };
