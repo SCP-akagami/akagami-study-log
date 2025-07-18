@@ -107,6 +107,11 @@ body {
   color: #111827 !important;
 }
 
+/* 本文のスタイル */
+.prose p {
+  color: #171717 !important;
+}
+
 /* 箇条書きのスタイル */
 .prose ul {
   list-style-type: disc !important;
