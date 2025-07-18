@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import { HiHome, HiTag, HiBookOpen } from 'react-icons/hi2'
+import { HiHome, HiTag, HiBookOpen, HiCalendarDays } from 'react-icons/hi2'
 
 export default function Navigation() {
   const pathname = usePathname()
@@ -17,6 +17,7 @@ export default function Navigation() {
 
   const navItems = [
     { name: 'ホーム', path: '/', icon: HiHome },
+    { name: 'カレンダー', path: '/calendar', icon: HiCalendarDays },
     { name: 'タグ一覧', path: '/tags', icon: HiTag },
   ]
 

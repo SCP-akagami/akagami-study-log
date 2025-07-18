@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { getAllPosts, getAllTags, getTagsWithCount, getPostCountByTag } from '../../lib/posts'
-import Navigation from '../components/Navigation'
 import TagCloud from '../components/TagCloud'
 import { HiOutlineGlobeAlt } from 'react-icons/hi2'
 
@@ -11,9 +10,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* ナビゲーション */}
-      <Navigation />
-      
       {/* ヘッダー */}
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-4xl mx-auto px-4 py-6">

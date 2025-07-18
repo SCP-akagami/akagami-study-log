@@ -3,7 +3,6 @@ import { getPostData, getAllPosts, getPostCountByTag } from '../../../../lib/pos
 import CodeHighlight from './CodeHighlight'
 import TableOfContents from './TableOfContents'
 import HeadingAnchor from './HeadingAnchor'
-import Navigation from '../../../components/Navigation'
 
 // 日付フォーマット関数（ハイドレーションエラーを防ぐため）
 function formatDate(dateString: string): string {
@@ -28,9 +27,6 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* ナビゲーション */}
-      <Navigation />
-
       <div className="max-w-4xl mx-auto px-4 py-8">
         <article className="bg-white rounded-lg shadow-sm border p-8">
           {/* 記事ヘッダー */}

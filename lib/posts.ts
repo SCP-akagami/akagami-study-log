@@ -139,4 +139,49 @@ export function getPostsByTagsOr(tags: string[]): Post[] {
 export function getPostCountByTag(tag: string): number {
   const posts = getAllPosts()
   return posts.filter(post => post.tags.includes(tag)).length
+}
+
+// カレンダー機能: 日付別投稿数を取得
+export function getPostCountByDate(): Record<string, number> {
+  const posts = getAllPosts()
+  const dateCounts: Record<string, number> = {}
+  
+  posts.forEach(post => {
+    const date = post.date
+    dateCounts[date] = (dateCounts[date] || 0) + 1
+  })
+  
+  return dateCounts
+}
+
+// カレンダー機能: 特定日付の投稿を取得
+export function getPostsByDate(date: string): Post[] {
+  const posts = getAllPosts()
+  return posts.filter(post => post.date === date)
+}
+
+// カレンダー機能: 年月別の投稿数を取得
+export function getPostCountByMonth(): Record<string, number> {
+  const posts = getAllPosts()
+  const monthCounts: Record<string, number> = {}
+  
+  posts.forEach(post => {
+    const yearMonth = post.date.substring(0, 7) // YYYY-MM
+    monthCounts[yearMonth] = (monthCounts[yearMonth] || 0) + 1
+  })
+  
+  return monthCounts
+}
+
+// カレンダー機能: 投稿がある日付の一覧を取得
+export function getPostDates(): string[] {
+  const posts = getAllPosts()
+  const dates = posts.map(post => post.date)
+  return [...new Set(dates)].sort()
+}
+
+// カレンダー機能: 特定の年月の投稿を取得
+export function getPostsByMonth(yearMonth: string): Post[] {
+  const posts = getAllPosts()
+  return posts.filter(post => post.date.startsWith(yearMonth))
 } 

@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { getTagsWithCount } from '../../../lib/posts'
-import Navigation from '../../components/Navigation'
 import TagCloud from '../../components/TagCloud'
 
 export default function TagsPage() {
@@ -8,17 +7,12 @@ export default function TagsPage() {
 
   return (
     <div className="min-h-screen bg-yellow-50">
-      {/* ナビゲーション */}
-      <Navigation />
-      
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* ヘッダー */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">タグ一覧</h1>
           <p className="text-gray-600">学習記録で使用されているタグの一覧です</p>
         </div>
-
-
 
         {/* タグ統計 */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
