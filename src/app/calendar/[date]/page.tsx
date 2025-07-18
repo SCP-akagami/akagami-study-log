@@ -5,22 +5,23 @@ import { getPostsByDate } from '../../../../lib/posts'
 import { HiArrowLeft, HiCalendarDays } from 'react-icons/hi2'
 
 interface DatePageProps {
-  params: {
+  params: Promise<{
     date: string
-  }
+  }>
 }
 
 export async function generateMetadata({ params }: DatePageProps): Promise<Metadata> {
-  const posts = getPostsByDate(params.date)
+  const { date } = await params
+  const posts = getPostsByDate(date)
   
   return {
-    title: `${params.date}の投稿 - 学習記録`,
-    description: `${params.date}に投稿された記事一覧です。`,
+    title: `${date}の投稿 - 学習記録`,
+    description: `${date}に投稿された記事一覧です。`,
   }
 }
 
-export default function DatePage({ params }: DatePageProps) {
-  const { date } = params
+export default async function DatePage({ params }: DatePageProps) {
+  const { date } = await params
   const posts = getPostsByDate(date)
   
   // 日付が無効または投稿がない場合は404

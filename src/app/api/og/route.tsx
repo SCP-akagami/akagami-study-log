@@ -232,7 +232,7 @@ export async function GET(request: NextRequest) {
         height: 630,
       }
     )
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.error('OG画像生成エラー:', e)
     return new Response('画像生成に失敗しました', { status: 500 })
   }
