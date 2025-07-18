@@ -4,6 +4,12 @@ import matter from 'gray-matter'
 import { remark } from 'remark'
 import html from 'remark-html'
 import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
+import rehypeMathjax from 'rehype-mathjax'
+import { unified } from 'unified'
+import remarkParse from 'remark-parse'
+import remarkRehype from 'remark-rehype'
+import rehypeStringify from 'rehype-stringify'
 
 const postsDirectory = path.join(process.cwd(), 'posts')
 
@@ -52,10 +58,19 @@ export async function getPostData(id: string): Promise<Post> {
   const fileContents = fs.readFileSync(fullPath, 'utf8')
   const matterResult = matter(fileContents)
   
-  // Use remark to convert markdown into HTML string
-  const processedContent = await remark()
+  // Use unified processor for correct handling of math with MathJax
+  const processedContent = await unified()
+    .use(remarkParse)
     .use(remarkGfm)
-    .use(html)
+    .use(remarkMath)
+    .use(remarkRehype)
+    .use(rehypeMathjax, {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      },
+    })
+    .use(rehypeStringify)
     .process(matterResult.content)
   const contentHtml = processedContent.toString()
   
