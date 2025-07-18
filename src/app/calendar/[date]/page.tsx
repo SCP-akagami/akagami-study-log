@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: DatePageProps): Promise<Metad
   
   return {
     title: `${date}の投稿 - 学習記録`,
-    description: `${date}に投稿された記事一覧です。`,
+    description: `${date}に投稿された記事一覧です。${posts.length}件の投稿があります。`,
   }
 }
 

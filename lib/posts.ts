@@ -1,8 +1,6 @@
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
-import { remark } from 'remark'
-import html from 'remark-html'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import rehypeMathjax from 'rehype-mathjax'
@@ -11,29 +9,34 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import rehypeStringify from 'rehype-stringify'
 import { visit } from 'unist-util-visit'
+import type { Node } from 'unist'
 
 // 画像パスを処理するプラグイン
 function rehypeImagePath() {
-  return (tree: any) => {
-    visit(tree, 'element', (node) => {
+  return (tree: Node) => {
+    visit(tree, 'element', (node: Node & { tagName?: string; properties?: { src?: string; className?: string[] } }) => {
       if (node.tagName === 'img') {
-        const src = node.properties.src
+        const src = node.properties?.src
         if (src && typeof src === 'string') {
           // 相対パスの場合は/images/に変換
           if (!src.startsWith('http') && !src.startsWith('/')) {
-            node.properties.src = `/images/${src}`
+            if (node.properties) {
+              node.properties.src = `/images/${src}`
+            }
           }
           // 画像にレスポンシブ対応のCSSクラスを追加
-          node.properties.className = [
-            ...(node.properties.className || []),
-            'max-w-full',
-            'h-auto',
-            'rounded-lg',
-            'shadow-sm',
-            'border',
-            'border-gray-200',
-            'my-4'
-          ]
+          if (node.properties) {
+            node.properties.className = [
+              ...(node.properties.className || []),
+              'max-w-full',
+              'h-auto',
+              'rounded-lg',
+              'shadow-sm',
+              'border',
+              'border-gray-200',
+              'my-4'
+            ]
+          }
         }
       }
     })
