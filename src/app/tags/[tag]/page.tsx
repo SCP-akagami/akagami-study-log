@@ -1,5 +1,38 @@
 import Link from 'next/link'
 import { getPostsByTag, getAllTags } from '../../../../lib/posts'
+import { Metadata } from 'next'
+
+export async function generateMetadata({ params }: { params: Promise<{ tag: string }> }): Promise<Metadata> {
+  const { tag } = await params
+  const decodedTag = decodeURIComponent(tag)
+  const posts = getPostsByTag(decodedTag)
+  
+  const ogImageUrl = `/api/og?title=${encodeURIComponent(decodedTag)}&subtitle=${encodeURIComponent(`${posts.length}件の記事があります`)}&type=tag`
+  
+  return {
+    title: `${decodedTag} - 学習記録`,
+    description: `「${decodedTag}」タグの記事一覧です。${posts.length}件の記事があります。`,
+    openGraph: {
+      title: `${decodedTag} - 学習記録`,
+      description: `「${decodedTag}」タグの記事一覧です。${posts.length}件の記事があります。`,
+      type: 'website',
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${decodedTag} - 学習記録`,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${decodedTag} - 学習記録`,
+      description: `「${decodedTag}」タグの記事一覧です。${posts.length}件の記事があります。`,
+      images: [ogImageUrl],
+    },
+  }
+}
 
 export async function generateStaticParams() {
   const tags = getAllTags()

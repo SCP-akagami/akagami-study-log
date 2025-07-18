@@ -1,6 +1,31 @@
 import Link from 'next/link'
 import { getTagsWithCount } from '../../../lib/posts'
 import TagCloud from '../../components/TagCloud'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'タグ一覧 - 学習記録',
+  description: '学習記録で使用されているタグの一覧です。タグ別に記事を探すことができます。',
+  openGraph: {
+    title: 'タグ一覧 - 学習記録',
+    description: '学習記録で使用されているタグの一覧です。タグ別に記事を探すことができます。',
+    type: 'website',
+    images: [
+      {
+        url: '/api/og?title=タグ一覧&subtitle=学習記録で使用されているタグの一覧&type=tags',
+        width: 1200,
+        height: 630,
+        alt: 'タグ一覧 - 学習記録',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'タグ一覧 - 学習記録',
+    description: '学習記録で使用されているタグの一覧です。タグ別に記事を探すことができます。',
+    images: ['/api/og?title=タグ一覧&subtitle=学習記録で使用されているタグの一覧&type=tags'],
+  },
+}
 
 export default function TagsPage() {
   const tagsWithCount = getTagsWithCount()

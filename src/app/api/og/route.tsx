@@ -9,6 +9,8 @@ export async function GET(request: NextRequest) {
     const title = searchParams.get('title') || '学習記録'
     const date = searchParams.get('date') || ''
     const tags = searchParams.get('tags') || ''
+    const type = searchParams.get('type') || 'article' // 'home', 'tags', 'tag', 'article'
+    const subtitle = searchParams.get('subtitle') || ''
     
     // タグを配列に変換
     const tagList = tags ? tags.split(',').slice(0, 3) : []
@@ -83,7 +85,7 @@ export async function GET(request: NextRequest) {
               📚 学習記録
             </div>
             
-            {/* 記事タイトル */}
+            {/* タイトル */}
             <div
               style={{
                 fontSize: title.length > 30 ? '48px' : '56px',
@@ -91,15 +93,30 @@ export async function GET(request: NextRequest) {
                 color: '#111827',
                 textAlign: 'center',
                 lineHeight: '1.2',
-                marginBottom: '30px',
+                marginBottom: subtitle || formattedDate || tagList.length > 0 ? '30px' : '0px',
                 maxWidth: '100%',
               }}
             >
               {title}
             </div>
             
-            {/* 日付 */}
-            {formattedDate && (
+            {/* サブタイトル */}
+            {subtitle && (
+              <div
+                style={{
+                  fontSize: '24px',
+                  color: '#6b7280',
+                  marginBottom: '20px',
+                  textAlign: 'center',
+                  fontWeight: '500',
+                }}
+              >
+                {subtitle}
+              </div>
+            )}
+            
+            {/* 日付（記事の場合のみ） */}
+            {formattedDate && type === 'article' && (
               <div
                 style={{
                   fontSize: '20px',
