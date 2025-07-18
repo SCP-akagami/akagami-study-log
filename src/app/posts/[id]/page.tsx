@@ -68,9 +68,12 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
             <div
               className="prose prose-lg max-w-none 
                          prose-headings:text-gray-900 prose-headings:font-bold
-                         prose-h1:text-2xl prose-h1:mb-6 prose-h1:pb-2 prose-h1:border-b prose-h1:border-gray-200
-                         prose-h2:text-xl prose-h2:mb-4 prose-h2:mt-8
-                         prose-h3:text-lg prose-h3:mb-3 prose-h3:mt-6
+                         prose-h1:text-4xl prose-h1:mb-8 prose-h1:mt-12 prose-h1:pb-3 prose-h1:border-b prose-h1:border-gray-200
+                         prose-h2:text-3xl prose-h2:mb-6 prose-h2:mt-10 prose-h2:pb-2 prose-h2:border-b prose-h2:border-gray-100
+                         prose-h3:text-2xl prose-h3:mb-4 prose-h3:mt-8 prose-h3:font-semibold
+                         prose-h4:text-xl prose-h4:mb-3 prose-h4:mt-6 prose-h4:font-semibold
+                         prose-h5:text-lg prose-h5:mb-2 prose-h5:mt-4 prose-h5:font-semibold
+                         prose-h6:text-base prose-h6:mb-2 prose-h6:mt-4 prose-h6:font-semibold
                          prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4
                          prose-a:text-blue-600 prose-a:no-underline hover:prose-a:text-blue-800 hover:prose-a:underline
                          prose-strong:text-gray-900 prose-strong:font-semibold

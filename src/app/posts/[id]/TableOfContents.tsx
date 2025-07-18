@@ -15,8 +15,15 @@ interface TableOfContentsProps {
 export default function TableOfContents({ content }: TableOfContentsProps) {
   const [toc, setToc] = useState<TocItem[]>([])
   const [activeId, setActiveId] = useState<string>('')
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
+    
     // HTMLから見出しを抽出
     const parser = new DOMParser()
     const doc = parser.parseFromString(content, 'text/html')
@@ -45,9 +52,11 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
     })
     
     setToc(tocItems)
-  }, [content])
+  }, [content, mounted])
 
   useEffect(() => {
+    if (!mounted || toc.length === 0) return
+    
     // 実際のDOM要素にIDを設定
     const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6')
     headings.forEach((heading, index) => {
@@ -78,7 +87,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
     return () => {
       window.removeEventListener('scroll', handleScroll)
     }
-  }, [toc])
+  }, [toc, mounted])
 
   const handleClick = (id: string) => {
     const element = document.getElementById(id)
@@ -87,7 +96,8 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
     }
   }
 
-  if (toc.length === 0) {
+  // サーバーサイドレンダリング時は何も表示しない
+  if (!mounted || toc.length === 0) {
     return null
   }
 
