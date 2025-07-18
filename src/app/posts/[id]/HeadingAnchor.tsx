@@ -30,7 +30,7 @@ export default function HeadingAnchor() {
           setTimeout(() => {
             anchorButton.innerHTML = '🔗'
           }, 1000)
-        } catch (err) {
+        } catch {
           // フォールバック: URLをアドレスバーに設定
           window.location.hash = heading.id
         }
