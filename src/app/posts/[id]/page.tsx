@@ -78,7 +78,7 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
                          prose-a:text-blue-600 prose-a:no-underline hover:prose-a:text-blue-800 hover:prose-a:underline
                          prose-strong:text-gray-900 prose-strong:font-semibold
                          prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-code:text-gray-800
-                         prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto
+                         prose-pre:bg-gray-100 prose-pre:text-gray-900 prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto prose-pre:border prose-pre:border-gray-200
                          prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-600
                          prose-ul:mb-4 prose-ol:mb-4
                          prose-li:text-gray-700 prose-li:mb-1

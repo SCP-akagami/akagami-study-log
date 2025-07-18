@@ -78,6 +78,35 @@ body {
   color: #111827 !important;
 }
 
+/* コードブロックのスタイル */
+.prose pre {
+  background-color: #f3f4f6 !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.5rem !important;
+  padding: 1rem !important;
+  overflow-x: auto !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 0.875rem !important;
+  line-height: 1.5 !important;
+  color: #111827 !important;
+}
+
+.prose code {
+  background-color: #f3f4f6 !important;
+  padding: 0.125rem 0.25rem !important;
+  border-radius: 0.25rem !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 0.875rem !important;
+  color: #111827 !important;
+}
+
+/* インラインコードの背景を見出しやリンク内でも適用 */
+.prose h1 code, .prose h2 code, .prose h3 code, .prose h4 code, .prose h5 code, .prose h6 code,
+.prose a code {
+  background-color: #f3f4f6 !important;
+  color: #111827 !important;
+}
+
 /* シンプルなコードハイライトスタイル */
 .token.comment,
 .token.prolog,
