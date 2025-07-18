@@ -3,6 +3,7 @@ import { getPostData, getAllPosts, getPostCountByTag } from '../../../../lib/pos
 import CodeHighlight from './CodeHighlight'
 import TableOfContents from './TableOfContents'
 import HeadingAnchor from './HeadingAnchor'
+import { Metadata } from 'next'
 
 // 日付フォーマット関数（ハイドレーションエラーを防ぐため）
 function formatDate(dateString: string): string {
@@ -12,6 +13,41 @@ function formatDate(dateString: string): string {
   const day = date.getDate()
   
   return `${year}年${month}月${day}日`
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const post = await getPostData(id)
+  
+  // OGP画像のURLを生成
+  const ogImageUrl = `/api/og?title=${encodeURIComponent(post.title)}&date=${encodeURIComponent(post.date)}&tags=${encodeURIComponent(post.tags.join(','))}`
+  
+  return {
+    title: `${post.title} - 学習記録`,
+    description: `${post.title}についての学習記録。投稿日: ${post.date}`,
+    openGraph: {
+      title: post.title,
+      description: `${post.title}についての学習記録。投稿日: ${post.date}`,
+      type: 'article',
+      publishedTime: post.date,
+      authors: ['学習記録'],
+      tags: post.tags,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: `${post.title}についての学習記録。投稿日: ${post.date}`,
+      images: [ogImageUrl],
+    },
+  }
 }
 
 export async function generateStaticParams() {
