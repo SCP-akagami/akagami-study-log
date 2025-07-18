@@ -1,6 +1,6 @@
 ---
 title: 'Markdownファイルの動的読み込みを実装'
-date: '2024-01-25'
+date: '2025-07-18'
 tags: ['Markdown', 'Next.js', 'gray-matter', 'remark']
 ---
 
