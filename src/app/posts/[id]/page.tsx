@@ -133,7 +133,8 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
                          prose-li:text-gray-700 prose-li:mb-1 prose-li:leading-relaxed
                          prose-table:border-collapse prose-table:w-full
                          prose-th:border prose-th:border-gray-300 prose-th:bg-gray-50 prose-th:px-4 prose-th:py-2 prose-th:text-left prose-th:font-semibold
-                         prose-td:border prose-td:border-gray-300 prose-td:px-4 prose-td:py-2"
+                         prose-td:border prose-td:border-gray-300 prose-td:px-4 prose-td:py-2
+                         prose-img:rounded-lg prose-img:shadow-sm prose-img:border prose-img:border-gray-200 prose-img:max-w-full prose-img:h-auto prose-img:my-6"
               dangerouslySetInnerHTML={{ __html: post.content || '' }}
             />
           </CodeHighlight>

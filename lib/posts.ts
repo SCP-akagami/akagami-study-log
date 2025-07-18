@@ -10,6 +10,35 @@ import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import rehypeStringify from 'rehype-stringify'
+import { visit } from 'unist-util-visit'
+
+// 画像パスを処理するプラグイン
+function rehypeImagePath() {
+  return (tree: any) => {
+    visit(tree, 'element', (node) => {
+      if (node.tagName === 'img') {
+        const src = node.properties.src
+        if (src && typeof src === 'string') {
+          // 相対パスの場合は/images/に変換
+          if (!src.startsWith('http') && !src.startsWith('/')) {
+            node.properties.src = `/images/${src}`
+          }
+          // 画像にレスポンシブ対応のCSSクラスを追加
+          node.properties.className = [
+            ...(node.properties.className || []),
+            'max-w-full',
+            'h-auto',
+            'rounded-lg',
+            'shadow-sm',
+            'border',
+            'border-gray-200',
+            'my-4'
+          ]
+        }
+      }
+    })
+  }
+}
 
 const postsDirectory = path.join(process.cwd(), 'posts')
 
@@ -64,6 +93,7 @@ export async function getPostData(id: string): Promise<Post> {
     .use(remarkGfm)
     .use(remarkMath)
     .use(remarkRehype)
+    .use(rehypeImagePath) // 画像パス処理を追加
     .use(rehypeMathjax, {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
