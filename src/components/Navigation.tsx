@@ -27,7 +27,7 @@ export default function Navigation() {
           {/* ロゴ・タイトル */}
           <Link href="/" className="flex items-center space-x-2">
             <HiBookOpen className="w-7 h-7 text-blue-600" />
-            <span className="text-xl font-bold text-gray-900">学習記録</span>
+            <span className="text-xl font-bold text-gray-900">赤神の学習メモ</span>
           </Link>
 
           {/* デスクトップナビゲーション */}

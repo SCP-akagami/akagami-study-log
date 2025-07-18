@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { getAllPosts, getAllTags, getTagsWithCount, getPostCountByTag } from '../../lib/posts'
 import Navigation from '../components/Navigation'
 import TagCloud from '../components/TagCloud'
+import { HiOutlineGlobeAlt } from 'react-icons/hi2'
 
 export default function Home() {
   const posts = getAllPosts()
@@ -16,7 +17,20 @@ export default function Home() {
       {/* ヘッダー */}
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-4xl mx-auto px-4 py-6">
-          <p className="text-gray-600 text-center">日々の学習を記録しています</p>
+          <div className="text-center">
+            <p className="text-gray-600 mb-3">赤神の日々の学習を記録しています</p>
+            <div className="flex items-center justify-center gap-2">
+              <HiOutlineGlobeAlt className="w-4 h-4 text-gray-500" />
+              <a
+                href="https://x.com/SoraAkagami0709"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 transition-colors text-sm font-medium"
+              >
+                @SoraAkagami0709
+              </a>
+            </div>
+          </div>
         </div>
       </header>
 
