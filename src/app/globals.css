@@ -107,6 +107,42 @@ body {
   color: #111827 !important;
 }
 
+/* 箇条書きのスタイル */
+.prose ul {
+  list-style-type: disc !important;
+  padding-left: 1.5rem !important;
+  margin-left: 0 !important;
+  margin-bottom: 1rem !important;
+}
+
+.prose ol {
+  list-style-type: decimal !important;
+  padding-left: 1.5rem !important;
+  margin-left: 0 !important;
+  margin-bottom: 1rem !important;
+}
+
+.prose li {
+  color: #374151 !important;
+  margin-bottom: 0.25rem !important;
+  line-height: 1.6 !important;
+}
+
+/* ハイパーリンクのスタイル */
+.prose a {
+  color: #2563eb !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  border-bottom: 1px solid transparent !important;
+  transition: all 0.2s ease !important;
+}
+
+.prose a:hover {
+  color: #1d4ed8 !important;
+  text-decoration: underline !important;
+  border-bottom-color: #1d4ed8 !important;
+}
+
 /* シンプルなコードハイライトスタイル */
 .token.comment,
 .token.prolog,
