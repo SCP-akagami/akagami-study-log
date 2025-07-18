@@ -96,9 +96,18 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
     }
   }
 
-  // サーバーサイドレンダリング時は何も表示しない
+  // サーバーサイドレンダリング時はプレースホルダーを表示
   if (!mounted || toc.length === 0) {
-    return null
+    return (
+      <div className="bg-gray-50 border rounded-lg p-4 mb-8">
+        <h2 className="text-lg font-semibold text-gray-900 mb-3">目次</h2>
+        <div className="space-y-2">
+          <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+          <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4"></div>
+          <div className="h-4 bg-gray-200 rounded animate-pulse w-1/2"></div>
+        </div>
+      </div>
+    )
   }
 
   return (

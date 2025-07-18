@@ -5,6 +5,16 @@ import TableOfContents from './TableOfContents'
 import HeadingAnchor from './HeadingAnchor'
 import Navigation from '../../../components/Navigation'
 
+// 日付フォーマット関数（ハイドレーションエラーを防ぐため）
+function formatDate(dateString: string): string {
+  const date = new Date(dateString)
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  
+  return `${year}年${month}月${day}日`
+}
+
 export async function generateStaticParams() {
   const posts = getAllPosts()
   return posts.map((post) => ({
@@ -31,11 +41,7 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
             
             <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
               <time dateTime={post.date}>
-                {new Date(post.date).toLocaleDateString('ja-JP', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
+                {formatDate(post.date)}
               </time>
             </div>
             

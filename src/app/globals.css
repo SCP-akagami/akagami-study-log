@@ -143,6 +143,80 @@ body {
   border-bottom-color: #1d4ed8 !important;
 }
 
+/* 取り消し線のスタイル */
+.prose del {
+  color: #6b7280 !important;
+  text-decoration: line-through !important;
+  background-color: #fee2e2 !important;
+  padding: 0.125rem 0.25rem !important;
+  border-radius: 0.25rem !important;
+}
+
+/* 引用文のスタイル */
+.prose blockquote {
+  border-left: 4px solid #3b82f6 !important;
+  padding-left: 1rem !important;
+  margin: 1.5rem 0 !important;
+  background-color: #f8fafc !important;
+  padding: 1rem !important;
+  border-radius: 0.5rem !important;
+  font-style: italic !important;
+  color: #475569 !important;
+}
+
+.prose blockquote p {
+  margin: 0 !important;
+  color: #475569 !important;
+}
+
+/* 表のスタイル */
+.prose table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 1.5rem 0 !important;
+  font-size: 0.875rem !important;
+  border-radius: 0.5rem !important;
+  overflow: hidden !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+.prose th {
+  background-color: #f1f5f9 !important;
+  color: #1e293b !important;
+  font-weight: 600 !important;
+  padding: 0.75rem 1rem !important;
+  text-align: left !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+  border-right: 1px solid #e2e8f0 !important;
+}
+
+.prose th:last-child {
+  border-right: none !important;
+}
+
+.prose td {
+  padding: 0.75rem 1rem !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  border-right: 1px solid #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+.prose td:last-child {
+  border-right: none !important;
+}
+
+.prose tr:last-child td {
+  border-bottom: none !important;
+}
+
+.prose tr:nth-child(even) {
+  background-color: #f8fafc !important;
+}
+
+.prose tr:hover {
+  background-color: #e2e8f0 !important;
+}
+
 /* シンプルなコードハイライトスタイル */
 .token.comment,
 .token.prolog,
