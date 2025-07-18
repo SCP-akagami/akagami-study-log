@@ -37,12 +37,12 @@ export async function GET(request: NextRequest) {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '#f8fafc',
-            backgroundImage: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            backgroundColor: '#0f172a',
+            backgroundImage: 'radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.15) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(147, 51, 234, 0.15) 0%, transparent 50%)',
             position: 'relative',
           }}
         >
-          {/* 背景のグラデーション装飾 */}
+          {/* 背景の装飾パターン */}
           <div
             style={{
               position: 'absolute',
@@ -50,7 +50,35 @@ export async function GET(request: NextRequest) {
               left: 0,
               right: 0,
               bottom: 0,
-              background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.9) 0%, rgba(147, 51, 234, 0.9) 100%)',
+              background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.8) 0%, rgba(147, 51, 234, 0.8) 100%)',
+              opacity: 0.9,
+            }}
+          />
+          
+          {/* 装飾的な円 */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '-100px',
+              right: '-100px',
+              width: '300px',
+              height: '300px',
+              borderRadius: '50%',
+              background: 'rgba(255, 255, 255, 0.1)',
+              opacity: 0.7,
+            }}
+          />
+          
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '-150px',
+              left: '-150px',
+              width: '400px',
+              height: '400px',
+              borderRadius: '50%',
+              background: 'rgba(255, 255, 255, 0.05)',
+              opacity: 0.8,
             }}
           />
           
@@ -61,25 +89,32 @@ export async function GET(request: NextRequest) {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: 'white',
+              backgroundColor: 'rgba(255, 255, 255, 0.98)',
               padding: '60px 80px',
-              borderRadius: '24px',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+              borderRadius: '32px',
+              boxShadow: '0 32px 64px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(20px)',
               maxWidth: '1000px',
               margin: '0 40px',
               position: 'relative',
               zIndex: 1,
+              border: '1px solid rgba(255, 255, 255, 0.2)',
             }}
           >
             {/* サイトロゴ/タイトル */}
             <div
               style={{
-                fontSize: '24px',
-                fontWeight: '600',
-                color: '#6b7280',
-                marginBottom: '20px',
+                fontSize: '28px',
+                fontWeight: '700',
+                color: '#4f46e5',
+                marginBottom: '24px',
                 display: 'flex',
                 alignItems: 'center',
+                gap: '12px',
+                background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
               }}
             >
               📚 学習記録
@@ -88,13 +123,15 @@ export async function GET(request: NextRequest) {
             {/* タイトル */}
             <div
               style={{
-                fontSize: title.length > 30 ? '48px' : '56px',
-                fontWeight: '800',
-                color: '#111827',
+                fontSize: title.length > 40 ? '44px' : title.length > 30 ? '52px' : '64px',
+                fontWeight: '900',
+                color: '#0f172a',
                 textAlign: 'center',
-                lineHeight: '1.2',
-                marginBottom: subtitle || formattedDate || tagList.length > 0 ? '30px' : '0px',
+                lineHeight: '1.1',
+                marginBottom: subtitle || formattedDate || tagList.length > 0 ? '32px' : '0px',
                 maxWidth: '100%',
+                textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                letterSpacing: '-0.025em',
               }}
             >
               {title}
@@ -104,11 +141,13 @@ export async function GET(request: NextRequest) {
             {subtitle && (
               <div
                 style={{
-                  fontSize: '24px',
-                  color: '#6b7280',
-                  marginBottom: '20px',
+                  fontSize: '26px',
+                  color: '#475569',
+                  marginBottom: '24px',
                   textAlign: 'center',
-                  fontWeight: '500',
+                  fontWeight: '600',
+                  opacity: 0.9,
+                  letterSpacing: '-0.01em',
                 }}
               >
                 {subtitle}
@@ -119,11 +158,17 @@ export async function GET(request: NextRequest) {
             {formattedDate && type === 'article' && (
               <div
                 style={{
-                  fontSize: '20px',
-                  color: '#6b7280',
-                  marginBottom: '20px',
+                  fontSize: '22px',
+                  color: '#6366f1',
+                  marginBottom: '24px',
                   display: 'flex',
                   alignItems: 'center',
+                  gap: '8px',
+                  fontWeight: '600',
+                  background: 'rgba(99, 102, 241, 0.1)',
+                  padding: '8px 16px',
+                  borderRadius: '12px',
+                  border: '1px solid rgba(99, 102, 241, 0.2)',
                 }}
               >
                 📅 {formattedDate}
@@ -136,7 +181,7 @@ export async function GET(request: NextRequest) {
                 style={{
                   display: 'flex',
                   flexWrap: 'wrap',
-                  gap: '12px',
+                  gap: '16px',
                   justifyContent: 'center',
                 }}
               >
@@ -144,13 +189,15 @@ export async function GET(request: NextRequest) {
                   <div
                     key={index}
                     style={{
-                      backgroundColor: '#dbeafe',
+                      backgroundColor: 'rgba(59, 130, 246, 0.1)',
                       color: '#1e40af',
-                      padding: '8px 20px',
-                      borderRadius: '20px',
-                      fontSize: '18px',
-                      fontWeight: '500',
-                      border: '2px solid #93c5fd',
+                      padding: '10px 24px',
+                      borderRadius: '24px',
+                      fontSize: '20px',
+                      fontWeight: '600',
+                      border: '2px solid rgba(59, 130, 246, 0.3)',
+                      boxShadow: '0 4px 12px rgba(59, 130, 246, 0.15)',
+                      backdropFilter: 'blur(8px)',
                     }}
                   >
                     #{tag.trim()}
@@ -166,9 +213,14 @@ export async function GET(request: NextRequest) {
               position: 'absolute',
               bottom: '40px',
               right: '40px',
-              color: 'rgba(255, 255, 255, 0.8)',
-              fontSize: '16px',
-              fontWeight: '500',
+              color: 'rgba(255, 255, 255, 0.9)',
+              fontSize: '18px',
+              fontWeight: '600',
+              background: 'rgba(255, 255, 255, 0.1)',
+              padding: '8px 16px',
+              borderRadius: '16px',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
             }}
           >
             study-log
