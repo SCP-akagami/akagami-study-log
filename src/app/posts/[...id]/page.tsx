@@ -15,9 +15,11 @@ function formatDate(dateString: string): string {
   return `${year}年${month}月${day}日`
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+// ルートパラメータ型を修正
+export async function generateMetadata({ params }: { params: Promise<{ id: string[] }> }): Promise<Metadata> {
   const { id } = await params
-  const post = await getPostData(id)
+  const postId = id.join('/')
+  const post = await getPostData(postId)
   
   // 記事内の最初の画像があればそれを使用、なければ動的OG画像を使用
   let ogImageUrl: string
@@ -78,13 +80,14 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export async function generateStaticParams() {
   const posts = getAllPosts()
   return posts.map((post) => ({
-    id: post.id,
+    id: post.id.split('/'),
   }))
 }
 
-export default async function Post({ params }: { params: Promise<{ id: string }> }) {
+export default async function Post({ params }: { params: Promise<{ id: string[] }> }) {
   const { id } = await params
-  const post = await getPostData(id)
+  const postId = id.join('/')
+  const post = await getPostData(postId)
 
   return (
     <div className="min-h-screen bg-gray-50">

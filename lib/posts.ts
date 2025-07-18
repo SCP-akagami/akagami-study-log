@@ -76,6 +76,23 @@ function rehypeImagePath() {
 
 const postsDirectory = path.join(process.cwd(), 'posts')
 
+// 再帰的にposts配下の全.mdファイルのパスを取得
+function getAllMarkdownFiles(dir: string, baseDir = dir): string[] {
+  let results: string[] = []
+  const list = fs.readdirSync(dir)
+  list.forEach((file) => {
+    const filePath = path.join(dir, file)
+    const stat = fs.statSync(filePath)
+    if (stat && stat.isDirectory()) {
+      results = results.concat(getAllMarkdownFiles(filePath, baseDir))
+    } else if (file.endsWith('.md')) {
+      // baseDirからの相対パス
+      results.push(path.relative(baseDir, filePath))
+    }
+  })
+  return results
+}
+
 export interface Post {
   id: string
   title: string
@@ -91,15 +108,14 @@ export interface TagWithCount {
 }
 
 export function getAllPosts(): Post[] {
-  const fileNames = fs.readdirSync(postsDirectory)
-  const allPostsData = fileNames
-    .filter((fileName) => fileName.endsWith('.md'))
-    .map((fileName) => {
-      const id = fileName.replace(/\.md$/, '')
-      const fullPath = path.join(postsDirectory, fileName)
+  const filePaths = getAllMarkdownFiles(postsDirectory)
+  const allPostsData = filePaths
+    .map((relativePath) => {
+      // idは拡張子なしの相対パス（例: 2024/01/01）
+      const id = relativePath.replace(/\\/g, '/').replace(/\.md$/, '')
+      const fullPath = path.join(postsDirectory, relativePath)
       const fileContents = fs.readFileSync(fullPath, 'utf8')
       const matterResult = matter(fileContents)
-      
       return {
         id,
         title: matterResult.data.title,
@@ -107,7 +123,6 @@ export function getAllPosts(): Post[] {
         tags: matterResult.data.tags || [],
       }
     })
-  
   return allPostsData.sort((a, b) => {
     if (a.date < b.date) {
       return 1
@@ -118,13 +133,13 @@ export function getAllPosts(): Post[] {
 }
 
 export async function getPostData(id: string): Promise<Post> {
-  const fullPath = path.join(postsDirectory, `${id}.md`)
+  // idはサブパス形式（例: 2024/01/01）
+  const relativePath = id + '.md'
+  const fullPath = path.join(postsDirectory, relativePath)
   const fileContents = fs.readFileSync(fullPath, 'utf8')
   const matterResult = matter(fileContents)
-  
   // 最初の画像を抽出
   const firstImage = extractFirstImage(matterResult.content)
-  
   // Use unified processor for correct handling of math with MathJax
   const processedContent = await unified()
     .use(remarkParse)
@@ -141,7 +156,6 @@ export async function getPostData(id: string): Promise<Post> {
     .use(rehypeStringify)
     .process(matterResult.content)
   const contentHtml = processedContent.toString()
-  
   return {
     id,
     title: matterResult.data.title,
