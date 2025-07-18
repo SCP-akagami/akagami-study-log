@@ -1,5 +1,8 @@
 import Link from 'next/link'
 import { getPostData, getAllPosts } from '../../../../lib/posts'
+import CodeHighlight from './CodeHighlight'
+import TableOfContents from './TableOfContents'
+import HeadingAnchor from './HeadingAnchor'
 
 export async function generateStaticParams() {
   const posts = getAllPosts()
@@ -57,11 +60,34 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
             </div>
           </header>
 
+          {/* 目次 */}
+          <TableOfContents content={post.content || ''} />
+
           {/* 記事本文 */}
-          <div
-            className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: post.content || '' }}
-          />
+          <CodeHighlight>
+            <div
+              className="prose prose-lg max-w-none 
+                         prose-headings:text-gray-900 prose-headings:font-bold
+                         prose-h1:text-2xl prose-h1:mb-6 prose-h1:pb-2 prose-h1:border-b prose-h1:border-gray-200
+                         prose-h2:text-xl prose-h2:mb-4 prose-h2:mt-8
+                         prose-h3:text-lg prose-h3:mb-3 prose-h3:mt-6
+                         prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4
+                         prose-a:text-blue-600 prose-a:no-underline hover:prose-a:text-blue-800 hover:prose-a:underline
+                         prose-strong:text-gray-900 prose-strong:font-semibold
+                         prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-code:text-gray-800
+                         prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto
+                         prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-600
+                         prose-ul:mb-4 prose-ol:mb-4
+                         prose-li:text-gray-700 prose-li:mb-1
+                         prose-table:border-collapse prose-table:w-full
+                         prose-th:border prose-th:border-gray-300 prose-th:bg-gray-50 prose-th:px-4 prose-th:py-2 prose-th:text-left prose-th:font-semibold
+                         prose-td:border prose-td:border-gray-300 prose-td:px-4 prose-td:py-2"
+              dangerouslySetInnerHTML={{ __html: post.content || '' }}
+            />
+          </CodeHighlight>
+
+          {/* 見出しアンカーリンク機能 */}
+          <HeadingAnchor />
         </article>
       </div>
     </div>
