@@ -11,6 +11,37 @@ import rehypeStringify from 'rehype-stringify'
 import { visit } from 'unist-util-visit'
 import type { Node } from 'unist'
 
+// 画像URLの有効性を確認する関数
+export async function validateImageUrl(url: string): Promise<boolean> {
+  try {
+    const response = await fetch(url, { method: 'HEAD' })
+    const contentType = response.headers.get('content-type')
+    return response.ok && (contentType?.startsWith('image/') ?? false)
+  } catch {
+    return false
+  }
+}
+
+// 記事の最初の画像を抽出する関数
+export function extractFirstImage(content: string): string | null {
+  // Markdownの画像記法 ![alt](src) を正規表現で抽出
+  const imageRegex = /!\[.*?\]\(([^)]+)\)/
+  const match = content.match(imageRegex)
+  
+  if (match && match[1]) {
+    const src = match[1].trim()
+    
+    // 相対パスの場合は絶対パスに変換
+    if (!src.startsWith('http') && !src.startsWith('/')) {
+      return `/images/${src}`
+    } else {
+      return src
+    }
+  }
+  
+  return null
+}
+
 // 画像パスを処理するプラグイン
 function rehypeImagePath() {
   return (tree: Node) => {
@@ -18,8 +49,8 @@ function rehypeImagePath() {
       if (node.tagName === 'img') {
         const src = node.properties?.src
         if (src && typeof src === 'string') {
-          // 相対パスの場合は/images/に変換
-          if (!src.startsWith('http') && !src.startsWith('/')) {
+          // 相対パスの場合のみ/images/に変換（絶対パスやHTTPSは変換しない）
+          if (!src.startsWith('http') && !src.startsWith('/') && !src.startsWith('data:')) {
             if (node.properties) {
               node.properties.src = `/images/${src}`
             }
@@ -51,6 +82,7 @@ export interface Post {
   date: string
   tags: string[]
   content?: string
+  firstImage?: string | null
 }
 
 export interface TagWithCount {
@@ -90,6 +122,9 @@ export async function getPostData(id: string): Promise<Post> {
   const fileContents = fs.readFileSync(fullPath, 'utf8')
   const matterResult = matter(fileContents)
   
+  // 最初の画像を抽出
+  const firstImage = extractFirstImage(matterResult.content)
+  
   // Use unified processor for correct handling of math with MathJax
   const processedContent = await unified()
     .use(remarkParse)
@@ -113,6 +148,7 @@ export async function getPostData(id: string): Promise<Post> {
     date: matterResult.data.date,
     tags: matterResult.data.tags || [],
     content: contentHtml,
+    firstImage,
   }
 }
 

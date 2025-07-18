@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { getPostData, getAllPosts, getPostCountByTag } from '../../../../lib/posts'
+import { getPostData, getAllPosts, getPostCountByTag, validateImageUrl } from '../../../../lib/posts'
 import CodeHighlight from './CodeHighlight'
 import TableOfContents from './TableOfContents'
 import HeadingAnchor from './HeadingAnchor'
@@ -19,8 +19,31 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params
   const post = await getPostData(id)
   
-  // OGP画像のURLを生成
-  const ogImageUrl = `/api/og?title=${encodeURIComponent(post.title)}&date=${encodeURIComponent(post.date)}&tags=${encodeURIComponent(post.tags.join(','))}`
+  // 記事内の最初の画像があればそれを使用、なければ動的OG画像を使用
+  let ogImageUrl: string
+  
+  if (post.firstImage) {
+    // 外部画像の場合はそのまま使用
+    if (post.firstImage.startsWith('http')) {
+      // 画像の有効性を確認（サーバーサイドでのみ実行）
+      const isValidImage = await validateImageUrl(post.firstImage)
+      if (isValidImage) {
+        ogImageUrl = post.firstImage
+      } else {
+        // 無効な画像の場合は動的OG画像を使用
+        ogImageUrl = `/api/og?title=${encodeURIComponent(post.title)}&date=${encodeURIComponent(post.date)}&tags=${encodeURIComponent(post.tags.join(','))}`
+      }
+    } 
+    // 内部画像の場合はベースURLを追加
+    else {
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+                     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
+      ogImageUrl = `${baseUrl}${post.firstImage}`
+    }
+  } else {
+    // 画像がない場合は動的OG画像を使用
+    ogImageUrl = `/api/og?title=${encodeURIComponent(post.title)}&date=${encodeURIComponent(post.date)}&tags=${encodeURIComponent(post.tags.join(','))}`
+  }
   
   return {
     title: `${post.title} - 学習記録`,
