@@ -22,6 +22,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   // 記事内の最初の画像があればそれを使用、なければ動的OG画像を使用
   let ogImageUrl: string
   
+  // ベースURLを取得
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+                 (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
+  
   if (post.firstImage) {
     // 外部画像の場合はそのまま使用
     if (post.firstImage.startsWith('http')) {
@@ -31,18 +35,16 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
         ogImageUrl = post.firstImage
       } else {
         // 無効な画像の場合は動的OG画像を使用
-        ogImageUrl = `/api/og?title=${encodeURIComponent(post.title)}&date=${encodeURIComponent(post.date)}&tags=${encodeURIComponent(post.tags.join(','))}`
+        ogImageUrl = `${baseUrl}/api/og?title=${encodeURIComponent(post.title)}&date=${encodeURIComponent(post.date)}&tags=${encodeURIComponent(post.tags.join(','))}`
       }
     } 
     // 内部画像の場合はベースURLを追加
     else {
-      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
-                     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
       ogImageUrl = `${baseUrl}${post.firstImage}`
     }
   } else {
     // 画像がない場合は動的OG画像を使用
-    ogImageUrl = `/api/og?title=${encodeURIComponent(post.title)}&date=${encodeURIComponent(post.date)}&tags=${encodeURIComponent(post.tags.join(','))}`
+    ogImageUrl = `${baseUrl}/api/og?title=${encodeURIComponent(post.title)}&date=${encodeURIComponent(post.date)}&tags=${encodeURIComponent(post.tags.join(','))}`
   }
   
   return {
