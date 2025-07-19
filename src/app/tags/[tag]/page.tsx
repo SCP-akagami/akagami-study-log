@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ tag: stri
 export async function generateStaticParams() {
   const tags = getAllTags()
   return tags.map((tag) => ({
-    tag: encodeURIComponent(tag),
+    tag, // encodeURIComponentせずに生の値で返す
   }))
 }
 
