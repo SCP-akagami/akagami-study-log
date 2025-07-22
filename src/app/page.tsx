@@ -122,9 +122,19 @@ export default function Home() {
 
         {/* 記事一覧 */}
         <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-6">最新の記事</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-semibold text-gray-900">最新の記事</h2>
+            {posts.length > 5 && (
+              <Link
+                href="/posts"
+                className="text-sm text-blue-600 hover:text-blue-800 transition-colors"
+              >
+                すべて見る ({posts.length}件) →
+              </Link>
+            )}
+          </div>
           
-          {posts.map((post) => (
+          {posts.slice(0, 5).map((post) => (
             <article
               key={post.id}
               className="border-b border-gray-200 py-6 last:border-b-0 last:pb-0"
@@ -173,17 +183,32 @@ export default function Home() {
               </div>
             </article>
           ))}
+          
+          {/* 記事がない場合の表示は変更なし */}
+          {posts.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-500">まだ学習記録がありません。</p>
+              <p className="text-gray-400 text-sm mt-2">
+                postsディレクトリにMarkdownファイルを追加してください。
+              </p>
+            </div>
+          )}
+          
+          {/* 5件表示中の場合の情報 */}
+          {posts.length > 5 && (
+            <div className="text-center pt-6 border-t border-gray-200 mt-6">
+              <p className="text-gray-500 text-sm mb-3">
+                最新5件を表示中（全{posts.length}件）
+              </p>
+              <Link
+                href="/posts"
+                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+              >
+                すべての記事を見る
+              </Link>
+            </div>
+          )}
         </div>
-
-        {/* 記事が0件の場合 */}
-        {posts.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500">まだ学習記録がありません。</p>
-            <p className="text-gray-400 text-sm mt-2">
-              postsディレクトリにMarkdownファイルを追加してください。
-            </p>
-          </div>
-        )}
       </div>
     </div>
   )
