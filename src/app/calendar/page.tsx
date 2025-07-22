@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { getPostCountByDate } from '../../../lib/posts'
+import { getCombinedPostCountByDate } from '../../../lib/posts'
 import Calendar from '@/components/Calendar'
 
 export const metadata: Metadata = {
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 }
 
 export default function CalendarPage() {
-  const postCountByDate = getPostCountByDate()
+  const combinedCounts = getCombinedPostCountByDate()
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -16,10 +16,10 @@ export default function CalendarPage() {
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-6">カレンダー</h1>
           <p className="text-gray-600 mb-8">
-            投稿された記事を日付別に確認できます。数字がある日付をクリックすると、その日の記事一覧が表示されます。
+            投稿された記事・つぶやきを日付別に確認できます。数字がある日付をクリックすると、その日の投稿一覧が表示されます。
           </p>
           
-          <Calendar postCountByDate={postCountByDate} />
+          <Calendar combinedCounts={combinedCounts} />
         </div>
       </div>
     </div>

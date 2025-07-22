@@ -5,10 +5,14 @@ import Link from 'next/link'
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2'
 
 interface CalendarProps {
-  postCountByDate: Record<string, number>
+  combinedCounts: {
+    posts: Record<string, number>
+    tweets: Record<string, number>
+    total: Record<string, number>
+  }
 }
 
-export default function Calendar({ postCountByDate }: CalendarProps) {
+export default function Calendar({ combinedCounts }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date())
   
   const currentYear = currentDate.getFullYear()
@@ -88,27 +92,38 @@ export default function Calendar({ postCountByDate }: CalendarProps) {
         <div className="grid grid-cols-7 gap-1">
           {/* 前月の空白部分 */}
           {Array.from({ length: firstDayOfWeek }).map((_, index) => (
-            <div key={`empty-${index}`} className="h-12"></div>
+            <div key={`empty-${index}`} className="h-16"></div>
           ))}
           
           {/* 現在の月の日付 */}
           {Array.from({ length: daysInMonth }).map((_, index) => {
             const day = index + 1
             const dateString = formatDate(currentYear, currentMonth, day)
-            const postCount = postCountByDate[dateString] || 0
-            const hasPost = postCount > 0
+            const postCount = combinedCounts.posts[dateString] || 0
+            const tweetCount = combinedCounts.tweets[dateString] || 0
+            const totalCount = combinedCounts.total[dateString] || 0
+            const hasContent = totalCount > 0
             
             return (
-              <div key={day} className="h-12 relative">
-                {hasPost ? (
+              <div key={day} className="h-16 relative">
+                {hasContent ? (
                   <Link
                     href={`/calendar/${dateString}`}
-                    className="w-full h-full flex flex-col items-center justify-center rounded-md border hover:bg-blue-50 hover:border-blue-300 transition-colors cursor-pointer"
+                    className="w-full h-full flex flex-col items-center justify-center rounded-md border hover:bg-blue-50 hover:border-blue-300 transition-colors cursor-pointer p-1"
                   >
-                    <span className="text-sm text-gray-900">{day}</span>
-                    <span className="text-xs text-blue-600 font-medium">
-                      {postCount}
-                    </span>
+                    <span className="text-sm text-gray-900 font-medium">{day}</span>
+                    <div className="flex flex-col items-center space-y-0.5">
+                      {postCount > 0 && (
+                        <span className="text-xs text-green-600 font-medium px-1 py-0.5 bg-green-100 rounded">
+                          記事 {postCount}
+                        </span>
+                      )}
+                      {tweetCount > 0 && (
+                        <span className="text-xs text-blue-600 font-medium px-1 py-0.5 bg-blue-100 rounded">
+                          つぶ {tweetCount}
+                        </span>
+                      )}
+                    </div>
                   </Link>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center rounded-md border border-gray-200">
@@ -129,8 +144,15 @@ export default function Calendar({ postCountByDate }: CalendarProps) {
             <span>投稿なし</span>
           </div>
           <div className="flex items-center space-x-2">
+            <div className="w-4 h-4 border border-green-300 bg-green-50 rounded"></div>
+            <span>記事</span>
+          </div>
+          <div className="flex items-center space-x-2">
             <div className="w-4 h-4 border border-blue-300 bg-blue-50 rounded"></div>
-            <span>投稿あり（クリック可能）</span>
+            <span>つぶやき</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span>（クリック可能）</span>
           </div>
         </div>
       </div>
