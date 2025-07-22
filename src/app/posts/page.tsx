@@ -71,7 +71,7 @@ export default function PostsPage() {
         {/* ヘッダー */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-3 mb-4">
-            <HiDocumentText className="w-10 h-10 text-green-600" />
+            <HiDocumentText className="w-10 h-10 text-gray-800" />
             <h1 className="text-3xl font-bold text-gray-800">記事一覧</h1>
           </div>
           <p className="text-gray-600">学習記録の全記事を時系列で確認</p>
@@ -89,7 +89,7 @@ export default function PostsPage() {
                 className="bg-white rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start space-x-4">
-                  <HiDocumentText className="w-6 h-6 text-green-600 mt-1 flex-shrink-0" />
+                  <HiDocumentText className="w-6 h-6 text-gray-800 mt-1 flex-shrink-0" />
                   <div className="flex-1">
                     <Link
                       href={`/posts/${post.id}`}
@@ -104,7 +104,7 @@ export default function PostsPage() {
                     <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                       <div className="flex items-center space-x-4">
                         <span>{formatDate(post.date)}</span>
-                        <span className="text-green-600 font-medium">
+                        <span className="text-blue-600 font-medium">
                           {formatRelativeTime(post.date)}
                         </span>
                       </div>
@@ -125,11 +125,11 @@ export default function PostsPage() {
                             <Link
                               key={tag}
                               href={`/tags/${encodeURIComponent(tag)}`}
-                              className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium hover:bg-green-200 transition-colors border border-green-200 hover:border-green-300"
+                              className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium hover:bg-blue-200 transition-colors border border-blue-200 hover:border-blue-300"
                             >
                               <span className="flex items-center gap-1">
                                 <span>#{tag}</span>
-                                <span className="text-xs bg-green-200 px-1.5 py-0.5 rounded-full">
+                                <span className="text-xs bg-blue-200 px-1.5 py-0.5 rounded-full">
                                   {postCount}
                                 </span>
                               </span>

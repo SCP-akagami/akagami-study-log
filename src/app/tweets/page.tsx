@@ -68,7 +68,7 @@ export default function TweetsPage() {
         {/* ヘッダー */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-3 mb-4">
-            <HiChatBubbleBottomCenterText className="w-10 h-10 text-blue-600" />
+            <HiChatBubbleBottomCenterText className="w-10 h-10 text-gray-800" />
             <h1 className="text-3xl font-bold text-gray-800">つぶやき一覧</h1>
           </div>
           <p className="text-gray-600">日々の学習記録や気づきを気軽に投稿</p>
@@ -86,7 +86,7 @@ export default function TweetsPage() {
                 className="bg-white rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start space-x-4">
-                  <HiChatBubbleBottomCenterText className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
+                  <HiChatBubbleBottomCenterText className="w-6 h-6 text-gray-800 mt-1 flex-shrink-0" />
                   <div className="flex-1">
                     {/* つぶやき内容 */}
                     <p className="text-gray-900 text-lg leading-relaxed mb-4 whitespace-pre-wrap">
