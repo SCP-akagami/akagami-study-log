@@ -75,6 +75,7 @@ function rehypeImagePath() {
 }
 
 const postsDirectory = path.join(process.cwd(), 'posts')
+const tweetsDirectory = path.join(process.cwd(), 'tweets')
 
 // 再帰的にposts配下の全.mdファイルのパスを取得
 function getAllMarkdownFiles(dir: string, baseDir = dir): string[] {
@@ -100,6 +101,14 @@ export interface Post {
   tags: string[]
   content?: string
   firstImage?: string | null
+}
+
+export interface Tweet {
+  id: string
+  content: string
+  datetime: string
+  date: string
+  tags: string[]
 }
 
 export interface TagWithCount {
@@ -267,4 +276,129 @@ export function getPostDates(): string[] {
 export function getPostsByMonth(yearMonth: string): Post[] {
   const posts = getAllPosts()
   return posts.filter(post => post.date.startsWith(yearMonth))
+} 
+
+// ========== つぶやき関連機能 ==========
+
+// つぶやきファイルの一覧を取得
+function getAllTweetFiles(): string[] {
+  if (!fs.existsSync(tweetsDirectory)) {
+    return []
+  }
+  
+  const files = fs.readdirSync(tweetsDirectory)
+  return files.filter(file => file.endsWith('.json')).sort()
+}
+
+// 全つぶやきを取得
+export function getAllTweets(): Tweet[] {
+  const tweetFiles = getAllTweetFiles()
+  const allTweets: Tweet[] = []
+  
+  tweetFiles.forEach(file => {
+    const filePath = path.join(tweetsDirectory, file)
+    const fileContents = fs.readFileSync(filePath, 'utf8')
+    const tweets: Tweet[] = JSON.parse(fileContents)
+    allTweets.push(...tweets)
+  })
+  
+  // 日時順で降順ソート（新しいものから）
+  return allTweets.sort((a, b) => {
+    if (a.datetime < b.datetime) {
+      return 1
+    } else {
+      return -1
+    }
+  })
+}
+
+// 特定日付のつぶやきを取得
+export function getTweetsByDate(date: string): Tweet[] {
+  const tweets = getAllTweets()
+  return tweets.filter(tweet => tweet.date === date)
+}
+
+// つぶやきの全タグを取得
+export function getAllTweetTags(): string[] {
+  const tweets = getAllTweets()
+  const allTags = tweets.flatMap(tweet => tweet.tags)
+  return [...new Set(allTags)].sort()
+}
+
+// つぶやきのタグと投稿数を取得
+export function getTweetTagsWithCount(): TagWithCount[] {
+  const tweets = getAllTweets()
+  const tagCounts: Record<string, number> = {}
+  
+  tweets.forEach(tweet => {
+    tweet.tags.forEach(tag => {
+      tagCounts[tag] = (tagCounts[tag] || 0) + 1
+    })
+  })
+  
+  return Object.entries(tagCounts)
+    .map(([tag, count]) => ({ tag, count }))
+    .sort((a, b) => b.count - a.count)
+}
+
+// つぶやきの日付別投稿数を取得
+export function getTweetCountByDate(): Record<string, number> {
+  const tweets = getAllTweets()
+  const dateCounts: Record<string, number> = {}
+  
+  tweets.forEach(tweet => {
+    const date = tweet.date
+    dateCounts[date] = (dateCounts[date] || 0) + 1
+  })
+  
+  return dateCounts
+}
+
+// ========== 統合機能（記事とつぶやき両方） ==========
+
+// 統合タグと投稿数を取得（記事+つぶやき）
+export function getCombinedTagsWithCount(): TagWithCount[] {
+  const postTags = getTagsWithCount()
+  const tweetTags = getTweetTagsWithCount()
+  const combinedTagCounts: Record<string, number> = {}
+  
+  // 記事のタグ集計
+  postTags.forEach(({ tag, count }) => {
+    combinedTagCounts[tag] = (combinedTagCounts[tag] || 0) + count
+  })
+  
+  // つぶやきのタグ集計
+  tweetTags.forEach(({ tag, count }) => {
+    combinedTagCounts[tag] = (combinedTagCounts[tag] || 0) + count
+  })
+  
+  return Object.entries(combinedTagCounts)
+    .map(([tag, count]) => ({ tag, count }))
+    .sort((a, b) => b.count - a.count)
+}
+
+// 統合日付別投稿数を取得（記事+つぶやき）
+export function getCombinedPostCountByDate(): { 
+  posts: Record<string, number>,
+  tweets: Record<string, number>,
+  total: Record<string, number>
+} {
+  const postCounts = getPostCountByDate()
+  const tweetCounts = getTweetCountByDate()
+  const totalCounts: Record<string, number> = {}
+  
+  // 全ての日付を集計
+  const allDates = new Set([...Object.keys(postCounts), ...Object.keys(tweetCounts)])
+  
+  allDates.forEach(date => {
+    const postCount = postCounts[date] || 0
+    const tweetCount = tweetCounts[date] || 0
+    totalCounts[date] = postCount + tweetCount
+  })
+  
+  return {
+    posts: postCounts,
+    tweets: tweetCounts,
+    total: totalCounts
+  }
 } 
