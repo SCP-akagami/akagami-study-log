@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { getAllPosts, getAllTags, getTagsWithCount, getPostCountByTag } from '../../lib/posts'
+import { getAllPosts, getAllTags, getCombinedTagsWithCount, getPostCountByTag, getAllTweets, getAllTweetTags } from '../../lib/posts'
 import TagCloud from '../components/TagCloud'
 import { HiOutlineGlobeAlt } from 'react-icons/hi2'
 import { Metadata } from 'next'
@@ -30,8 +30,14 @@ export const metadata: Metadata = {
 
 export default function Home() {
   const posts = getAllPosts()
+  const tweets = getAllTweets()
   const allTags = getAllTags()
-  const tagsWithCount = getTagsWithCount()
+  const allTweetTags = getAllTweetTags()
+  const combinedTagsWithCount = getCombinedTagsWithCount()
+  
+  // 統合統計情報
+  const totalPosts = posts.length + tweets.length
+  const totalTags = [...new Set([...allTags, ...allTweetTags])].length
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -58,20 +64,23 @@ export default function Home() {
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* 統計情報 */}
         <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{posts.length}</div>
+              <div className="text-2xl font-bold text-blue-600">{totalPosts}</div>
               <div className="text-sm text-gray-600">総投稿数</div>
+              <div className="text-xs text-gray-500 mt-1">記事{posts.length} + つぶやき{tweets.length}</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">{allTags.length}</div>
+              <div className="text-2xl font-bold text-green-600">{posts.length}</div>
+              <div className="text-sm text-gray-600">記事数</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">{tweets.length}</div>
+              <div className="text-sm text-gray-600">つぶやき数</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-orange-600">{totalTags}</div>
               <div className="text-sm text-gray-600">タグ数</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">
-                {posts.length > 0 ? Math.round(allTags.length / posts.length * 10) / 10 : 0}
-              </div>
-              <div className="text-sm text-gray-600">平均タグ数/投稿</div>
             </div>
           </div>
         </div>
@@ -88,7 +97,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="flex flex-wrap gap-2">
-            {tagsWithCount.slice(0, 10).map(({ tag, count }) => (
+            {combinedTagsWithCount.slice(0, 10).map(({ tag, count }) => (
               <Link
                 key={tag}
                 href={`/tags/${encodeURIComponent(tag)}`}
@@ -108,15 +117,17 @@ export default function Home() {
         {/* タグクラウド */}
         <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-6 text-center">タグクラウド</h2>
-          <TagCloud tags={tagsWithCount} maxTags={15} />
+          <TagCloud tags={combinedTagsWithCount} maxTags={15} />
         </div>
 
         {/* 記事一覧 */}
-        <div className="space-y-6">
+        <div className="bg-white rounded-lg shadow-sm border p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-6">最新の記事</h2>
+          
           {posts.map((post) => (
             <article
               key={post.id}
-              className="bg-white rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow"
+              className="border-b border-gray-200 py-6 last:border-b-0 last:pb-0"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -124,9 +135,9 @@ export default function Home() {
                     href={`/posts/${post.id}`}
                     className="block group"
                   >
-                    <h2 className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                    <h3 className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
                       {post.title}
-                    </h2>
+                    </h3>
                   </Link>
                   
                   <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
