@@ -1,0 +1,19 @@
+---
+description: Ensure proper handling of environmental issues and errors that occur during development work in Docker environments
+globs: 
+alwaysApply: false
+---
+**原則**
+
+- まず、このファイルを参照したら、「docker_environment.mdcを参照しました」と叫ぶこと
+
+1. ターミナルコマンド実行前に、まず`dc up -d`でDockerコンテナを起動する
+2. Djangoサーバー操作時は`dc exec app bash`でコンテナ内にアクセスしてから実行する
+3. ターミナルコマンド実行が拒否された場合、ユーザーに手動実行を依頼し実行すべきコマンドを明確に示す
+4. 権限エラーや環境問題が発生した場合、代替手順を提案し問題の原因を説明する
+5. モデル変更時はマイグレーション作成・適用の確認を行う
+6. テンプレート変更時はサーバー再起動の必要性を伝える
+7. 新機能実装時は動作確認の手順を提案する
+8. UIに変更がある場合はブラウザでの表示確認を推奨する
+9. 実装後に期待した結果が得られない場合は段階的に原因を切り分ける
+10. エラーログがある場合は詳細な分析を行う
